@@ -162,6 +162,8 @@ public:
 	// Sending component updates and RPCs.
 	worker::RequestId<worker::CreateEntityRequest> SendCreateEntityRequest(USpatialActorChannel* Channel, const FVector& Location, const FString& PlayerWorkerId, const TArray<uint16>& RepChanged, const TArray<uint16>& HandoverChanged);
 	worker::RequestId<worker::DeleteEntityRequest> SendDeleteEntityRequest(const FEntityId& EntityId);
+	void ReserveReplicatedStablyNamedActor(USpatialActorChannel* Channel);
+	void ReserveReplicatedStablyNamedActors();
 	void SendSpatialPositionUpdate(const FEntityId& EntityId, const FVector& Location);
 	void SendSpatialUpdate(USpatialActorChannel* Channel, const TArray<uint16>& RepChanged, const TArray<uint16>& HandoverChanged);
 	void SendSpatialUpdateSubobject(USpatialActorChannel* Channel, UObject* Subobject, FObjectReplicator* replicator, const TArray<uint16>& RepChanged, const TArray<uint16>& HandoverChanged);
@@ -226,6 +228,11 @@ public:
 		return NetDriver;
 	}
 
+	bool CanSpawnReplicatedStablyNamedActors() const
+	{
+		return bCanSpawnReplicatedStablyNamedActors;
+	}
+
 private:
 	UPROPERTY()
 	USpatialOS* SpatialOSInstance;
@@ -264,6 +271,8 @@ private:
 	FChannelToHandleToOPARMap PropertyToOPAR;
 	FOutgoingPendingArrayUpdateMap ObjectToOPAR;
 
+	bool bCanSpawnReplicatedStablyNamedActors;
+	TArray<USpatialActorChannel*> ReplicatedStablyNamedActorQueue;
 	// Used to queue resolved objects when added during a critical section. These objects then have
 	// any pending operations resolved on them once the critical section has ended.
 	FResolvedObjects ResolvedObjectQueue;
