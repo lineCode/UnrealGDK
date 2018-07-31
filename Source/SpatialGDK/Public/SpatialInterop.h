@@ -223,9 +223,11 @@ public:
 	NameToEntityIdMap* GetSingletonNameToEntityId() const;
 	EntityIdToPathMap* GetEntityIdToReplicatedStablyNamedPath() const;
 
-	void ReserveReplicatedStablyNamedActor(USpatialActorChannel* Channel);
+	void ReserveReplicatedStablyNamedActorChannel(USpatialActorChannel* Channel);
+	void UnreserveReplicatedStablyNamedActor(AActor* Actor);
 	void AddReplicatedStablyNamedActorToGSM(const FEntityId& EntityId, AActor* Actor);
 	void ReserveReplicatedStablyNamedActors();
+	void DeleteIrrelevantReplicatedStablyNamedActors(const EntityIdToPathMap& EntityIdToReplicatedStablyNamedPath);
 
 	// Accessors.
 	USpatialOS* GetSpatialOS() const
@@ -282,7 +284,9 @@ private:
 	FOutgoingPendingArrayUpdateMap ObjectToOPAR;
 
 	bool bCanSpawnReplicatedStablyNamedActors;
-	TArray<USpatialActorChannel*> ReplicatedStablyNamedActorQueue;
+	TArray<USpatialActorChannel*> ReplicatedStablyNamedActorChannelQueue;
+	TMap<AActor*, FTimerDelegate> ReplicatedStablyNamedActorTimeoutMap;
+
 	// Used to queue resolved objects when added during a critical section. These objects then have
 	// any pending operations resolved on them once the critical section has ended.
 	FResolvedObjects ResolvedObjectQueue;
