@@ -226,8 +226,6 @@ public:
 	void ReserveReplicatedStablyNamedActorChannel(USpatialActorChannel* Channel);
 	void UnreserveReplicatedStablyNamedActor(AActor* Actor);
 	void AddReplicatedStablyNamedActorToGSM(const FEntityId& EntityId, AActor* Actor);
-	void ReserveReplicatedStablyNamedActors();
-	void DeleteIrrelevantReplicatedStablyNamedActors(const EntityIdToPathMap& EntityIdToReplicatedStablyNamedPath);
 
 	// Accessors.
 	USpatialOS* GetSpatialOS() const
@@ -306,4 +304,7 @@ private:
 	void ResolvePendingOutgoingArrayUpdates(UObject* Object);
 
 	void GetSingletonActorAndChannel(FString ClassName, AActor*& OutActor, USpatialActorChannel*& OutChannel);
+
+	void ReserveReplicatedStablyNamedActors();
+	void DeleteIrrelevantReplicatedStablyNamedActors(const EntityIdToPathMap& EntityIdToReplicatedStablyNamedPath);
 };
